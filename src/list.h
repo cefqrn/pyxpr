@@ -1,24 +1,33 @@
 #ifndef LIST_H
 #define LIST_H
 
+#include "macros.h"
+
 #include <stdlib.h>
 
-struct list_node {
-    void *value;
-    struct list_node *next;
-    struct list_node *prev;
-};
+#define list_of(type) struct { \
+    size_t length; \
+    type data[]; \
+}
 
-struct list {
-    struct list_node *first;
-    struct list_node *last;
-    size_t length;
-};
+// allocate memory for a list of size of 1
+#define list_create(type) calloc(1, sizeof(list_of(type)) + 1 * sizeof(type))
+#define list_free(list) free(list)
 
-struct list *list_create();
-void list_free(struct list *l);
+// double the size of the list if the list length is a power of 2
+#define list_check_length(list) \
+    if (!(list->length & (list->length - 1))) { \
+        list = realloc(list, sizeof(*list) + 2 * list->length * sizeof(*list->data)); \
+        CHECK_ALLOC(list, "more expressions"); \
+    }
 
-void list_append(struct list *l, void *value);
-void *list_pop(struct list *l);
+#define list_append(list, value) { \
+    list->data[list->length++] = value; \
+    list_check_length(list); \
+}
+
+#define list_foreach(element, list) \
+    for (int _i=0, _j=1; _i < list->length; ++_i, _j=1) \
+        for (element=list->data[_i]; _j; _j=!_j)
 
 #endif

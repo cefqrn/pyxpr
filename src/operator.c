@@ -173,31 +173,3 @@ struct operator_binary eq_operator = {
     .length = 2,
     .precedence = 4
 };
-
-
-// array of unary operators in reverse order of precedence
-struct operator_unary *UNARY_OPERATORS[] = {
-    &negate_operator,
-    &invert_operator,
-    &paren_operator,
-};
-
-// array of binary operators in reverse order of precedence
-struct operator_binary *BINARY_OPERATORS[] = {
-    &lt_operator,
-    &le_operator,
-    &gt_operator,
-    &ge_operator,
-    &ne_operator,
-    &eq_operator,
-    &bor_operator,
-    &xor_operator,
-    &band_operator,
-    &sub_operator,
-    &add_operator,
-    &fdiv_operator,
-    &mod_operator,
-    &mul_operator,
-    &exponentiation_operator,
-    // &append_digit_operator,
-};

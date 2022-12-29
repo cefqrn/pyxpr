@@ -12,7 +12,7 @@ srcdir=src
 
 exe=$(bindir)/pyxpr
 
-objects=$(libdir)/operator.o $(libdir)/expression.o $(libdir)/list.o $(libdir)/main.o
+objects=$(libdir)/operator.o $(libdir)/expression.o $(libdir)/main.o
 .SECONDARY: $(objects)
 
 all: $(exe)
