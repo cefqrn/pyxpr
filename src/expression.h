@@ -8,18 +8,18 @@
 
 #define MAX_EXPRESSION_LENGTH 32
 
-struct expression {
+typedef struct expression {
     char text[MAX_EXPRESSION_LENGTH];
     int values[VALUE_COUNT];
     int precedence;
     bool allTruthy;
-};
+} expression;
 
-bool validate(struct expression expr);
+bool validate(expression expr);
 
-struct expression expression_from_constant(int value);
+expression expression_from_constant(int value);
 
-struct expression apply(struct expression expr, struct operator_unary op);
-struct expression combine(struct expression expr1, struct expression expr2, struct operator_binary op);
+expression apply(expression expr, operator_unary op);
+expression combine(expression expr1, expression expr2, operator_binary op);
 
 #endif

@@ -17,12 +17,12 @@ it should come from ~5
 int main() {
     // array of lists
     // index = length of expression
-    list_of(struct expression) *expressions[MAX_EXPRESSION_LENGTH];
+    list_of(expression) *expressions[MAX_EXPRESSION_LENGTH];
     for (size_t i=1; i < MAX_EXPRESSION_LENGTH; ++i) {
-        expressions[i] = list_create(struct expression);
+        expressions[i] = list_create(expression);
     }
 
-    struct expression var = {
+    expression var = {
         .text = "x",
         .precedence = VARIABLE_PRECEDENCE
     };
@@ -37,25 +37,25 @@ int main() {
         list_append(expressions[1], expression_from_constant(i));
     }
 
-    struct expression solution;
+    expression solution;
     for (size_t exprLength=1; exprLength < MAX_EXPRESSION_LENGTH; ++exprLength) {
         printf("Finding expressions of length %zu...\n", exprLength);
 
         for (size_t i=0; i < UNARY_OPERATOR_COUNT; ++i) {
-            struct operator_unary op = UNARY_OPERATORS[i];
+            operator_unary op = UNARY_OPERATORS[i];
             int requiredExprLength = exprLength - op.length;
 
             if (requiredExprLength < 1)
                 continue;
 
-            list_foreach(struct expression expr, expressions[requiredExprLength]) {
+            list_foreach(expression expr, expressions[requiredExprLength]) {
                 if (op.precedence > expr.precedence)
                     break;
 
                 if (exprLength + op.length > MAX_EXPRESSION_LENGTH - 1)
                     continue;
 
-                struct expression newExpr = apply(expr, op);
+                expression newExpr = apply(expr, op);
 
                 if (validate(newExpr)) {
                     solution = newExpr;
@@ -67,7 +67,7 @@ int main() {
         }
 
         for (size_t i=0; i < BINARY_OPERATOR_COUNT; ++i) {
-            struct operator_binary op = BINARY_OPERATORS[i];
+            operator_binary op = BINARY_OPERATORS[i];
             int maxRemainingLength = exprLength - op.length;
 
             if (maxRemainingLength < 2)
@@ -76,18 +76,18 @@ int main() {
             for (size_t expr1Length=1; expr1Length < maxRemainingLength; ++expr1Length) {
                 int expr2Length = exprLength - expr1Length - op.length;
 
-                list_foreach(struct expression expr1, expressions[expr1Length]) {
+                list_foreach(expression expr1, expressions[expr1Length]) {
                     if (op.precedence > expr1.precedence)
                         continue;
 
-                    list_foreach(struct expression expr2, expressions[expr2Length]) {
+                    list_foreach(expression expr2, expressions[expr2Length]) {
                         if (op.precedence >= expr2.precedence)
                             continue;
 
                         if (op.requiresTruthySecondExpression && !expr2.allTruthy)
                             continue;
 
-                        struct expression newExpr = combine(expr1, expr2, op);
+                        expression newExpr = combine(expr1, expr2, op);
 
                         if (validate(newExpr)) {
                             solution = newExpr;

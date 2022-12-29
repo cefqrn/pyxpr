@@ -9,7 +9,7 @@
 #include <stdio.h>
 
 // check if values is identical to correctValues
-bool validate(struct expression expr) {
+bool validate(expression expr) {
     #if CHECK_TRUTHY == 1
     for (size_t i=0; i < VALUE_COUNT; ++i) {
         if ((expr.values[i] ? true : false) ^ CORRECT[i])
@@ -23,8 +23,8 @@ bool validate(struct expression expr) {
 }
 
 // generate an expression from a constant value
-struct expression expression_from_constant(int value) {
-    struct expression expr = {
+expression expression_from_constant(int value) {
+    expression expr = {
         .precedence = CONSTANT_PRECEDENCE,
         .allTruthy = value ? true : false
     };
@@ -39,8 +39,8 @@ struct expression expression_from_constant(int value) {
 }
 
 // use a unary operator on an expression
-struct expression apply(struct expression expr, struct operator_unary op) {
-    struct expression newExpr = {
+expression apply(expression expr, operator_unary op) {
+    expression newExpr = {
         .precedence = op.precedence
     };
 
@@ -57,15 +57,14 @@ struct expression apply(struct expression expr, struct operator_unary op) {
 }
 
 // combine two expressions using a binary operator
-struct expression combine(struct expression expr1, struct expression expr2, struct operator_binary op) {
-    struct expression newExpr = {
+expression combine(expression expr1, expression expr2, operator_binary op) {
+    expression newExpr = {
         .precedence = op.precedence,
         .allTruthy = true
     };
 
     snprintf(newExpr.text, MAX_EXPRESSION_LENGTH, op.format, expr1.text, expr2.text);
 
-    
     for (size_t i=0; i < VALUE_COUNT; ++i) {
         int value = op.func(expr1.values[i], expr2.values[i]);
 

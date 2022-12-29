@@ -9,50 +9,50 @@
 #define VARIABLE_PRECEDENCE 16
 #define CONSTANT_PRECEDENCE 17
 
-struct operator_unary {
+typedef struct operator_unary {
     char format[MAX_TOKEN_FORMAT_LENGTH];
     int (*func)(int);
     size_t length;
     int precedence;
-};
+} operator_unary;
 
-struct operator_binary {
+typedef struct operator_binary {
     char format[MAX_TOKEN_FORMAT_LENGTH];
     int (*func)(int, int);
     size_t length;
     int precedence;
     bool requiresTruthySecondExpression;
-};
+} operator_binary;
 
-struct operator_unary paren_operator;
-struct operator_unary invert_operator;
-struct operator_unary negate_operator;
+operator_unary paren_operator;
+operator_unary invert_operator;
+operator_unary negate_operator;
 
-struct operator_binary exponentiation_operator;
-struct operator_binary mul_operator;
-struct operator_binary fdiv_operator;
-struct operator_binary mod_operator;
-struct operator_binary add_operator;
-struct operator_binary sub_operator;
-struct operator_binary band_operator;
-struct operator_binary xor_operator;
-struct operator_binary bor_operator;
-struct operator_binary lt_operator;
-struct operator_binary le_operator;
-struct operator_binary gt_operator;
-struct operator_binary ge_operator;
-struct operator_binary ne_operator;
-struct operator_binary eq_operator;
+operator_binary exponentiation_operator;
+operator_binary mul_operator;
+operator_binary fdiv_operator;
+operator_binary mod_operator;
+operator_binary add_operator;
+operator_binary sub_operator;
+operator_binary band_operator;
+operator_binary xor_operator;
+operator_binary bor_operator;
+operator_binary lt_operator;
+operator_binary le_operator;
+operator_binary gt_operator;
+operator_binary ge_operator;
+operator_binary ne_operator;
+operator_binary eq_operator;
 
 // array of unary operators in reverse order of precedence
-#define UNARY_OPERATORS (const struct operator_unary []){ \
+#define UNARY_OPERATORS (const operator_unary []){ \
     negate_operator, \
     invert_operator, \
     paren_operator, \
 }
 
 // array of binary operators in reverse order of precedence
-#define BINARY_OPERATORS (const struct operator_binary []){ \
+#define BINARY_OPERATORS (const operator_binary []){ \
     lt_operator, \
     le_operator, \
     gt_operator, \

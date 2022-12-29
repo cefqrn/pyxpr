@@ -36,21 +36,21 @@ int append_digit(int a, int b) {
 
 // unary operators
 
-struct operator_unary paren_operator = {
+operator_unary paren_operator = {
     .format = "(%s)",
     .func = paren,
     .length = 2,
     .precedence = 15
 };
 
-struct operator_unary invert_operator = {
+operator_unary invert_operator = {
     .format = "~%s",
     .func = invert,
     .length = 1,
     .precedence = 11
 };
 
-struct operator_unary negate_operator = {
+operator_unary negate_operator = {
     .format = "-%s",
     .func = negate,
     .length = 1,
@@ -60,28 +60,28 @@ struct operator_unary negate_operator = {
 
 // binary operators
 
-struct operator_binary append_digit_operator = {
+operator_binary append_digit_operator = {
     .format = "%s%s",
     .func = append_digit,
     .length = 0,
     .precedence = CONSTANT_PRECEDENCE
 };
 
-struct operator_binary exponentiation_operator = {
+operator_binary exponentiation_operator = {
     .format = "%s**%s",
     .func = exponentiate,
     .length = 2,
     .precedence = 12
 };
 
-struct operator_binary mul_operator = {
+operator_binary mul_operator = {
     .format = "%s*%s",
     .func = mul,
     .length = 1,
     .precedence = 10,
 };
 
-struct operator_binary fdiv_operator = {
+operator_binary fdiv_operator = {
     .format = "%s//%s",
     .func = fdiv,
     .length = 2,
@@ -89,7 +89,7 @@ struct operator_binary fdiv_operator = {
     .requiresTruthySecondExpression = true
 };
 
-struct operator_binary mod_operator = {
+operator_binary mod_operator = {
     .format = "%s%%%s",
     .func = mod,
     .length = 1,
@@ -97,77 +97,77 @@ struct operator_binary mod_operator = {
     .requiresTruthySecondExpression = true
 };
 
-struct operator_binary add_operator = {
+operator_binary add_operator = {
     .format = "%s+%s",
     .func = add,
     .length = 1,
     .precedence = 9
 };
 
-struct operator_binary sub_operator = {
+operator_binary sub_operator = {
     .format = "%s-%s",
     .func = sub,
     .length = 1,
     .precedence = 9
 };
 
-struct operator_binary band_operator = {
+operator_binary band_operator = {
     .format = "%s&%s",
     .func = band,
     .length = 1,
     .precedence = 7
 };
 
-struct operator_binary xor_operator = {
+operator_binary xor_operator = {
     .format = "%s^%s",
     .func = xor,
     .length = 1,
     .precedence = 6
 };
 
-struct operator_binary bor_operator = {
+operator_binary bor_operator = {
     .format = "%s|%s",
     .func = bor,
     .length = 1,
     .precedence = 5
 };
 
-struct operator_binary lt_operator = {
+operator_binary lt_operator = {
     .format = "%s<%s",
     .func = lt,
     .length = 1,
     .precedence = 4
 };
 
-struct operator_binary le_operator = {
+operator_binary le_operator = {
     .format = "%s<=%s",
     .func = le,
     .length = 2,
     .precedence = 4
 };
 
-struct operator_binary gt_operator = {
+operator_binary gt_operator = {
     .format = "%s>%s",
     .func = gt,
     .length = 1,
     .precedence = 4
 };
 
-struct operator_binary ge_operator = {
+operator_binary ge_operator = {
     .format = "%s>=%s",
     .func = ge,
     .length = 2,
     .precedence = 4
 };
 
-struct operator_binary ne_operator = {
+operator_binary ne_operator = {
     .format = "%s!=%s",
     .func = ne,
     .length = 2,
     .precedence = 4
 };
 
-struct operator_binary eq_operator = {
+operator_binary eq_operator = {
     .format = "%s==%s",
     .func = eq,
     .length = 2,
