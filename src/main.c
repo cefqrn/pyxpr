@@ -74,10 +74,9 @@ int main() {
                         if (op.precedence >= expr2.precedence)
                             continue;
 
-                        if (op.requiresTruthySecondExpression && !expr2.allTruthy)
-                            continue;
-
                         expression newExpr = combine(expr1, expr2, op);
+                        if (!newExpr.isValid)
+                            continue;
 
                         if (validate(newExpr))
                             print_solution(newExpr, exprLength);

@@ -21,7 +21,7 @@ typedef struct operator_binary {
     int (*func)(int, int);
     size_t length;
     int precedence;
-    bool requiresTruthySecondExpression;
+    bool hasDivision;
 } operator_binary;
 
 operator_unary paren_operator;

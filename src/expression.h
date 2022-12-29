@@ -12,7 +12,7 @@ typedef struct expression {
     char text[MAX_EXPRESSION_LENGTH];
     int values[VALUE_COUNT];
     int precedence;
-    bool allTruthy;
+    bool isValid;
 } expression;
 
 bool validate(expression expr);

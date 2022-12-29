@@ -4,6 +4,7 @@
 #include "macros.h"
 
 #include <stdbool.h>
+#include <limits.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -26,14 +27,13 @@ bool validate(expression expr) {
 expression expression_from_constant(int value) {
     expression expr = {
         .precedence = CONSTANT_PRECEDENCE,
-        .allTruthy = value ? true : false
+        .isValid = true
     };
-
-    for (size_t i=0; i < VALUE_COUNT; ++i) {
-        expr.values[i] = value;
-    }
-
     snprintf(expr.text, MAX_EXPRESSION_LENGTH, "%d", value);
+
+    for (size_t i=0; i < VALUE_COUNT; ++i)
+        expr.values[i] = value;
+
 
     return expr;
 }
@@ -41,17 +41,13 @@ expression expression_from_constant(int value) {
 // Use a unary operator on an expression
 expression apply(expression expr, operator_unary op) {
     expression newExpr = {
-        .precedence = op.precedence
+        .precedence = op.precedence,
+        .isValid = true
     };
-
     snprintf(newExpr.text, MAX_EXPRESSION_LENGTH, op.format, expr.text);
 
-    for (size_t i=0; i < VALUE_COUNT; ++i) {
-        int value = op.func(expr.values[i]);
-
-        newExpr.values[i] = value;
-        newExpr.allTruthy &= value ? true : false;
-    }
+    for (size_t i=0; i < VALUE_COUNT; ++i)
+        newExpr.values[i] = op.func(expr.values[i]);
 
     return newExpr;
 }
@@ -60,16 +56,18 @@ expression apply(expression expr, operator_unary op) {
 expression combine(expression expr1, expression expr2, operator_binary op) {
     expression newExpr = {
         .precedence = op.precedence,
-        .allTruthy = true
+        .isValid = true
     };
-
     snprintf(newExpr.text, MAX_EXPRESSION_LENGTH, op.format, expr1.text, expr2.text);
 
     for (size_t i=0; i < VALUE_COUNT; ++i) {
-        int value = op.func(expr1.values[i], expr2.values[i]);
+        // INT_MIN % -1 and INT_MIN / -1 raise arithmetic errors because they overflow
+        if ((!expr2.values[i] || (expr1.values[i] == INT_MIN && expr2.values[i] == -1)) && op.hasDivision) {
+            newExpr.isValid = false;
+            return newExpr;
+        }
 
-        newExpr.values[i] = value;
-        newExpr.allTruthy &= value ? true : false;
+        newExpr.values[i] = op.func(expr1.values[i], expr2.values[i]);
     }
 
     return newExpr;

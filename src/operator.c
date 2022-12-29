@@ -9,7 +9,7 @@ int invert(int x) { return ~x; }
 
 int mul (int a, int b) { return a * b; }
 int fdiv(int a, int b) { return a / b; }
-int mod (int a, int b) { return a % b; }
+int mod (int a, int b) { return ((a % b) + b) % b; }
 int add (int a, int b) { return a + b; }
 int sub (int a, int b) { return a - b; }
 int band(int a, int b) { return a & b; }
@@ -73,7 +73,7 @@ operator_binary fdiv_operator = {
     .func = fdiv,
     .length = 2,
     .precedence = 10,
-    .requiresTruthySecondExpression = true
+    .hasDivision = true
 };
 
 operator_binary mod_operator = {
@@ -81,7 +81,7 @@ operator_binary mod_operator = {
     .func = mod,
     .length = 1,
     .precedence = 10,
-    .requiresTruthySecondExpression = true
+    .hasDivision = true
 };
 
 operator_binary add_operator = {
