@@ -20,7 +20,7 @@ int main() {
         .precedence = VARIABLE_PRECEDENCE
     };
 
-    memcpy(var.values, initial, sizeof initial);
+    memcpy(var.values, INITIAL, sizeof INITIAL);
 
     // array of lists
     // index + 1 = length of expression

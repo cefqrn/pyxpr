@@ -10,15 +10,15 @@
 
 // check if values is identical to correctValues
 bool validate(struct expression *expr) {
-    #ifdef CHECK_TRUTHY
+    #if CHECK_TRUTHY == 1
     for (size_t i=0; i < VALUE_COUNT; ++i) {
-        if ((expr->values[i] ? true : false) ^ correct[i])
+        if ((expr->values[i] ? true : false) ^ CORRECT[i])
             return false;
     }
 
     return true;
     #else
-    return memcmp(expr->values, correct, VALUE_COUNT * sizeof(*correct)) ? false : true;
+    return memcmp(expr->values, CORRECT, sizeof CORRECT) ? false : true;
     #endif
 }
 
