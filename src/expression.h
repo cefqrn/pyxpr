@@ -6,7 +6,7 @@
 
 #include <stdbool.h>
 
-#define MAX_EXPRESSION_LENGTH 32
+#define MAX_EXPRESSION_LENGTH MAX_LENGTH_SEARCHED + 1
 
 typedef struct expression {
     char text[MAX_EXPRESSION_LENGTH];

@@ -24,17 +24,11 @@ int ne  (int a, int b) { return a != b; }
 int eq  (int a, int b) { return a == b; }
 
 int exponentiate(int a, int b) {
-    // does not support negative exponents (negative exponents require floats)
     return pow(a, b);
 }
 
-// completely wrong if a or b aren't 1 digit
-int append_digit(int a, int b) {
-    return a*10 + b;
-}
 
-
-// unary operators
+// Unary operators
 
 operator_unary paren_operator = {
     .format = "(%s)",
@@ -58,14 +52,7 @@ operator_unary negate_operator = {
 };
 
 
-// binary operators
-
-operator_binary append_digit_operator = {
-    .format = "%s%s",
-    .func = append_digit,
-    .length = 0,
-    .precedence = CONSTANT_PRECEDENCE
-};
+// Binary operators
 
 operator_binary exponentiation_operator = {
     .format = "%s**%s",

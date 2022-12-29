@@ -3,25 +3,22 @@
 #include "operator.h"
 #include "list.h"
 
+#include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 
-/*
-don't forget about operator precedence!
-if something has higher precedence, don't use it!
-it'll appear anyways from the other direction
-~5/2 shouldn't come from 5/2
-it should come from ~5
-*/
+void print_solution(expression solution, size_t length) {
+    printf("Found solution of length %zu: %s\n", length, solution.text);
+}
 
 int main() {
-    // array of lists
-    // index = length of expression
+    // Array of lists of expressions whose indices are equal to the length of the expressions they contain
     list_of(expression) *expressions[MAX_EXPRESSION_LENGTH];
     for (size_t i=1; i < MAX_EXPRESSION_LENGTH; ++i) {
         expressions[i] = list_create(expression);
     }
 
+    // Variable that takes the values of INITIAL
     expression var = {
         .text = "x",
         .precedence = VARIABLE_PRECEDENCE
@@ -29,15 +26,13 @@ int main() {
 
     memcpy(var.values, INITIAL, sizeof INITIAL);
 
-    // add variable
     list_append(expressions[strnlen(var.text, MAX_EXPRESSION_LENGTH)], var);
 
-    // add int literals
+    // Add integer literals from 0 through 9
     for (size_t i=0; i < 10; ++i) {
         list_append(expressions[1], expression_from_constant(i));
     }
 
-    expression solution;
     for (size_t exprLength=1; exprLength < MAX_EXPRESSION_LENGTH; ++exprLength) {
         printf("Finding expressions of length %zu...\n", exprLength);
 
@@ -52,15 +47,10 @@ int main() {
                 if (op.precedence > expr.precedence)
                     break;
 
-                if (exprLength + op.length > MAX_EXPRESSION_LENGTH - 1)
-                    continue;
-
                 expression newExpr = apply(expr, op);
 
-                if (validate(newExpr)) {
-                    solution = newExpr;
-                    goto EXIT;
-                }
+                if (validate(newExpr))
+                    print_solution(newExpr, exprLength);
 
                 list_append(expressions[exprLength], newExpr);
             }
@@ -89,10 +79,8 @@ int main() {
 
                         expression newExpr = combine(expr1, expr2, op);
 
-                        if (validate(newExpr)) {
-                            solution = newExpr;
-                            goto EXIT;
-                        }
+                        if (validate(newExpr))
+                            print_solution(newExpr, exprLength);
 
                         list_append(expressions[exprLength], newExpr);
                     }
@@ -100,11 +88,8 @@ int main() {
             }
         }
 
-        printf("Found %zu\n", expressions[exprLength]->length);
+        printf("Tried %zu expressions\n", expressions[exprLength]->length);
     }
-
-    EXIT:
-    printf("%s\n", solution.text);
 
     for (size_t i=1; i < MAX_EXPRESSION_LENGTH; ++i) {
         list_free(expressions[i]);

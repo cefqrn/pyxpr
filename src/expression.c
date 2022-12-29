@@ -8,7 +8,7 @@
 #include <string.h>
 #include <stdio.h>
 
-// check if values is identical to correctValues
+// Check whether expr's values are correct
 bool validate(expression expr) {
     #if CHECK_TRUTHY == 1
     for (size_t i=0; i < VALUE_COUNT; ++i) {
@@ -22,7 +22,7 @@ bool validate(expression expr) {
     #endif
 }
 
-// generate an expression from a constant value
+// Create an expression that always evaluates to value
 expression expression_from_constant(int value) {
     expression expr = {
         .precedence = CONSTANT_PRECEDENCE,
@@ -38,7 +38,7 @@ expression expression_from_constant(int value) {
     return expr;
 }
 
-// use a unary operator on an expression
+// Use a unary operator on an expression
 expression apply(expression expr, operator_unary op) {
     expression newExpr = {
         .precedence = op.precedence
@@ -56,7 +56,7 @@ expression apply(expression expr, operator_unary op) {
     return newExpr;
 }
 
-// combine two expressions using a binary operator
+// Combine two expressions with a binary operator
 expression combine(expression expr1, expression expr2, operator_binary op) {
     expression newExpr = {
         .precedence = op.precedence,

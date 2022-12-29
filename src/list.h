@@ -10,11 +10,11 @@
     type data[]; \
 }
 
-// allocate memory for a list of size of 1
+// Allocate memory for a list of size of 1
 #define list_create(type) calloc(1, sizeof(list_of(type)) + 1 * sizeof(type))
 #define list_free(list) free(list)
 
-// double the size of the list if the list length is a power of 2
+// Double the size of the list if the list length is a power of 2
 #define list_check_length(list) \
     if (!(list->length & (list->length - 1))) { \
         list = realloc(list, sizeof(*list) + 2 * list->length * sizeof(*list->data)); \

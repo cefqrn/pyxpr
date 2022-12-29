@@ -44,14 +44,14 @@ operator_binary ge_operator;
 operator_binary ne_operator;
 operator_binary eq_operator;
 
-// array of unary operators in reverse order of precedence
+// Array of unary operators in reverse order of precedence
 #define UNARY_OPERATORS (const operator_unary []){ \
     negate_operator, \
     invert_operator, \
     paren_operator, \
 }
 
-// array of binary operators in reverse order of precedence
+// Array of binary operators in reverse order of precedence
 #define BINARY_OPERATORS (const operator_binary []){ \
     lt_operator, \
     le_operator, \
