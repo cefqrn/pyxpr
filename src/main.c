@@ -1,6 +1,5 @@
 #include "parameters.h"
 #include "expression.h"
-#include "operator.h"
 #include "list.h"
 
 #include <stdlib.h>
