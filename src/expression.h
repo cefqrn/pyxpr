@@ -16,6 +16,7 @@ typedef struct expression {
 } expression;
 
 bool validate(expression expr);
+bool expression_eq(expression newExpr, expression baseExpr);
 
 expression expression_from_constant(int value);
 

@@ -23,6 +23,12 @@ bool validate(expression expr) {
     #endif
 }
 
+bool expression_eq(expression newExpr, expression baseExpr) {
+    return newExpr.precedence > baseExpr.precedence
+        ? false
+        : memcmp(newExpr.values, baseExpr.values, sizeof newExpr.values) ? false : true;
+}
+
 // Create an expression that always evaluates to value
 expression expression_from_constant(int value) {
     expression expr = {

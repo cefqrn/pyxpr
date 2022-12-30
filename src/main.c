@@ -52,19 +52,20 @@ int main() {
                 if (validate(newExpr))
                     print_solution(newExpr, exprLength);
 
-                list_append(expressions[exprLength], newExpr);
+                if (exprLength != MAX_LENGTH_SEARCHED && !expression_eq(newExpr, expr))
+                    list_append(expressions[exprLength], newExpr);
             }
         }
 
         for (size_t i=0; i < BINARY_OPERATOR_COUNT; ++i) {
             operator_binary op = BINARY_OPERATORS[i];
-            int maxRemainingLength = exprLength - op.length;
+            int remainingLength = exprLength - op.length;
 
-            if (maxRemainingLength < 2)
+            if (remainingLength < 2)
                 continue;
 
-            for (size_t expr1Length=1; expr1Length < maxRemainingLength; ++expr1Length) {
-                int expr2Length = exprLength - expr1Length - op.length;
+            for (size_t expr1Length=1; expr1Length < remainingLength; ++expr1Length) {
+                int expr2Length = remainingLength - expr1Length;
 
                 list_foreach(expression expr1, expressions[expr1Length]) {
                     if (op.precedence > expr1.precedence)
@@ -81,13 +82,14 @@ int main() {
                         if (validate(newExpr))
                             print_solution(newExpr, exprLength);
 
-                        list_append(expressions[exprLength], newExpr);
+                        if (exprLength != MAX_LENGTH_SEARCHED && !expression_eq(newExpr, expr1) && !expression_eq(newExpr, expr2))
+                            list_append(expressions[exprLength], newExpr);
                     }
                 }
             }
         }
 
-        printf("Tried %zu expressions\n", expressions[exprLength]->length);
+        printf("Cached %zu expressions\n", expressions[exprLength]->length);
     }
 
     for (size_t i=1; i < MAX_EXPRESSION_LENGTH; ++i) {
