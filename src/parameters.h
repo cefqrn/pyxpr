@@ -14,6 +14,6 @@
 // If CHECK_TRUTHY is 1, the values must be either 0 or 1.
 #define CORRECT (const int []){  1,  1,  0,  1,  0,  1,  0,  0,  0 }
 
-#define VALUE_COUNT (sizeof(INITIAL) / sizeof(INITIAL[0]))
+#define VALUE_COUNT (sizeof(INITIAL) / sizeof(*INITIAL))
 
 #endif

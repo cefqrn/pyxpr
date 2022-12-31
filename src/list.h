@@ -26,8 +26,4 @@
     list_check_length(list); \
 }
 
-#define list_foreach(element, list) \
-    for (int _i=0, _j=1; _i < list->length; ++_i, _j=1) \
-        for (element=list->data[_i]; _j; _j=!_j)
-
 #endif
