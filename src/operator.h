@@ -7,6 +7,8 @@
 
 struct expression;
 
+#define COMPARISON_PRECEDENCE 4
+
 typedef enum operator_atom_type {
     VARIABLE,
     INT_LITERAL,
@@ -45,6 +47,7 @@ typedef struct operator {
         void (*unaryFunc )(struct expression *, const struct expression *);
         void (*binaryFunc)(struct expression *, const struct expression *, const struct expression *);
     };
+    void (*chainedFunc)(struct expression *, const struct expression *, const struct expression *);
     size_t length;
     int precedence;
 } operator;

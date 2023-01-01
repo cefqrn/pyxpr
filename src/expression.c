@@ -69,8 +69,14 @@ void expression_combine(expression *buf, const expression *expr1, const expressi
         .isValid = op->precedence <= expr1->op->precedence && op->precedence < expr2->op->precedence
     };
 
-    if (buf->isValid)
-        op->binaryFunc(buf, expr1, expr2);
+    if (buf->isValid) {
+        // Chained comparison
+        if (op->precedence == COMPARISON_PRECEDENCE && expr1->op->precedence == COMPARISON_PRECEDENCE) {
+            op->chainedFunc(buf, expr1, expr2);
+        } else {
+            op->binaryFunc(buf, expr1, expr2);
+        }
+    }
 }
 
 // Generate the text representation for an expression
