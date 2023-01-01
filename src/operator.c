@@ -2,6 +2,7 @@
 #include "operator.h"
 
 #include <limits.h>
+#include <stdlib.h>
 #include <math.h>
 
 #define UNARY_FUNC(name, operation) \

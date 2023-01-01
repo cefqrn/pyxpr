@@ -4,7 +4,6 @@
 #include "list.h"
 
 #include <stdlib.h>
-#include <string.h>
 #include <stdio.h>
 
 void print_solution(expression *solution, size_t length) {
@@ -14,15 +13,11 @@ void print_solution(expression *solution, size_t length) {
     printf("Found solution of length %zu: %s\n", length, buf);
 }
 
-const operator OPERATOR_AAA[] = {
-    [PAREN_OPERATOR] = { .format = "(%s)", .precedence = 15, .length = 2 },
-};
-
 int main() {
     // Array of lists of expressions whose indices are equal to the length of the expressions they contain
     list_of(expression) *expressions[MAX_EXPRESSION_LENGTH];
     for (size_t i=1; i < MAX_EXPRESSION_LENGTH; ++i)
-        expressions[i] = list_create(expression);
+        expressions[i] = list_create(expressions[i]);
 
     // Add variable that takes the values of INITIAL
     list_append(expressions[1], expression_variable_create());
@@ -44,7 +39,7 @@ int main() {
             for (size_t j=0; j < expressions[exprLength]->length; ++j) {
                 expression *expr = expressions[exprLength]->data + j;
 
-                // overwrite the last element in the list until it's valid
+                // Overwrite the last element in the list until it's valid
                 expression *newExpr = expressions[newExprLength]->data + expressions[newExprLength]->length;
                 expression_apply(newExpr, expr, op);
                 if (!newExpr->isValid)
@@ -53,7 +48,8 @@ int main() {
                 if (expression_validate(newExpr))
                     print_solution(newExpr, newExprLength);
 
-                if (newExpr->isValid && newExprLength != MAX_LENGTH_SEARCHED) {
+                // Don't store the expression if this is the last loop
+                if (newExprLength != MAX_LENGTH_SEARCHED) {
                     expressions[newExprLength]->length++;
                     list_check_length(expressions[newExprLength]);
                 }
@@ -68,7 +64,7 @@ int main() {
                 continue;
 
             for (size_t expr1Length=1; expr1Length < remainingLength; ++expr1Length) {
-                int expr2Length = remainingLength - expr1Length;
+                size_t expr2Length = remainingLength - expr1Length;
 
                 for (size_t j=0; j < expressions[expr1Length]->length; ++j) {
                     expression *expr1 = expressions[expr1Length]->data + j;
@@ -83,7 +79,7 @@ int main() {
                         if (expression_validate(newExpr))
                             print_solution(newExpr, newExprLength);
 
-                        if (newExpr->isValid && newExprLength != MAX_LENGTH_SEARCHED) {
+                        if (newExprLength != MAX_LENGTH_SEARCHED) {
                             expressions[newExprLength]->length++;
                             list_check_length(expressions[newExprLength]);
                         }
@@ -92,10 +88,9 @@ int main() {
             }
         }
 
-        printf("Cached %zu expressions\n", expressions[newExprLength]->length);
+        printf("Stored %zu expressions\n", expressions[newExprLength]->length);
     }
 
-    for (size_t i=1; i < MAX_EXPRESSION_LENGTH; ++i) {
-        list_free(expressions[i]);
-    }
+    for (size_t i=1; i < MAX_EXPRESSION_LENGTH; ++i)
+        list_destroy(expressions[i]);
 }

@@ -4,14 +4,12 @@
 #include "macros.h"
 
 #include <stdbool.h>
-#include <limits.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include <math.h>
 
 // Check whether expr's values are correct
-bool expression_validate(expression *expr) {
+bool expression_validate(const expression *expr) {
     #if CHECK_TRUTHY == 1
     for (size_t i=0; i < VALUE_COUNT; ++i) {
         if ((expr->values[i] ? true : false) ^ CORRECT[i])
@@ -24,6 +22,7 @@ bool expression_validate(expression *expr) {
     #endif
 }
 
+// Create an expression that evaluates to the values in INITIAL
 expression expression_variable_create() {
     expression expr = {
         .op = OPERATOR_ATOM + VARIABLE,
@@ -49,7 +48,7 @@ expression expression_int_literal_create(int value) {
     return expr;
 }
 
-// Use a unary operator on an expression
+// Set the buffer to the result of a unary operation on the passed expression
 void expression_apply(expression *buf, const expression *expr, const operator *op) {
     *buf = (expression){
         .expr1 = expr,
@@ -61,7 +60,7 @@ void expression_apply(expression *buf, const expression *expr, const operator *o
         op->unaryFunc(buf, expr);
 }
 
-// Combine two expressions with a binary operator
+// Set the buffer to the result of a binary operation on the passed expressions
 void expression_combine(expression *buf, const expression *expr1, const expression *expr2, const operator *op) {
     *buf = (expression){
         .expr1 = expr1,
@@ -74,6 +73,7 @@ void expression_combine(expression *buf, const expression *expr1, const expressi
         op->binaryFunc(buf, expr1, expr2);
 }
 
+// Generate the text representation for an expression
 void expression_format(char buf[MAX_EXPRESSION_LENGTH], const expression *expr) {
     if (expr->op == OPERATOR_ATOM + INT_LITERAL) {
         snprintf(buf, MAX_EXPRESSION_LENGTH, "%d", *expr->values);

@@ -5,7 +5,6 @@
 #include "operator.h"
 
 #include <stdbool.h>
-#include <stdlib.h>
 
 #define MAX_EXPRESSION_LENGTH MAX_LENGTH_SEARCHED + 1
 
@@ -19,7 +18,7 @@ typedef struct expression {
 
 void expression_format(char buf[MAX_EXPRESSION_LENGTH], const expression *expr);
 
-bool expression_validate(expression *expr);
+bool expression_validate(const expression *expr);
 
 expression expression_variable_create();
 expression expression_int_literal_create(int value);
