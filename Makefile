@@ -1,9 +1,9 @@
 SHELL = /bin/sh
 .SUFFIXES: .o .c
-.PHONY: clean run rerun
+.PHONY: clean remake run rerun
 
 CC=gcc
-CFLAGS=-g -Wall -O3
+CFLAGS=-g -Wall -Wextra -O3
 LDFLAGS=
 
 bindir=bin
@@ -12,7 +12,7 @@ srcdir=src
 
 exe=$(bindir)/pyxpr
 
-objects=$(libdir)/expression.o $(libdir)/operator.o $(libdir)/main.o
+objects=$(libdir)/expression.o $(libdir)/operator.o $(libdir)/hashtable.o $(libdir)/main.o
 .SECONDARY: $(objects)
 
 all: $(exe)
@@ -31,6 +31,10 @@ $(bindir):
 
 clean:
 	rm -f $(bindir)/* $(libdir)/*
+
+remake:
+	make clean
+	make
 
 run: $(exe)
 	$(exe)
