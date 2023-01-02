@@ -36,26 +36,36 @@ BINARY_FUNC(ne_func, !=);
 BINARY_FUNC(eq_func, ==);
 
 void pow_func(expression *x, const expression *a, const expression *b) {
-    for (size_t i=0; i < VALUE_COUNT; ++i)
+    for (size_t i=0; i < VALUE_COUNT; ++i) {
+        if (a->values[i] == 0 && b->values[i] < 0) {  // python doesn't allow raising 0 to a negative power
+            x->isValid = false;
+            return;
+        }
+
         x->values[i] = pow(a->values[i], b->values[i]);
+    }
 }
 
 void fdiv_func(expression *x, const expression *a, const expression *b) {
     for (size_t i=0; i < VALUE_COUNT; ++i) {
-        if (!b->values[i] || (a->values[i] == INT_MIN && b->values[i] == -1)) {
+        if (b->values[i] == 0 || (a->values[i] == INT_MIN && b->values[i] == -1)) {
             x->isValid = false;
             return;
         }
-        x->values[i] = a->values[i] / b->values[i];
+
+        // C's int div truncates instead of flooring
+        x->values[i] = floor((double)a->values[i] / b->values[i]);
     }
 }
 
 void mod_func(expression *x, const expression *a, const expression *b) {
     for (size_t i=0; i < VALUE_COUNT; ++i) {
-        if (!b->values[i] || (a->values[i] == INT_MIN && b->values[i] == -1)) {
+        if (b->values[i] == 0 || (a->values[i] == INT_MIN && b->values[i] == -1)) {
             x->isValid = false;
             return;
         }
+
+        // C's mod gives the remainder
         x->values[i] = ((a->values[i] % b->values[i]) + b->values[i]) % b->values[i];
     }
 }
