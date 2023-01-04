@@ -48,12 +48,15 @@ int main() {
 
                 // Overwrite the last element in the list until it's valid
                 expression *newExpr = expressions[newExprLength]->data + expressions[newExprLength]->length;
-                expression_apply(newExpr, expr, op);
-                if (!newExpr->isValid)
+                if (!expression_apply(newExpr, expr, op))
                     continue;
 
-                if (expression_validate(newExpr))
+                if (expression_validate(newExpr)) {
                     print_solution(newExpr, newExprLength);
+                    #if CACHE_SOLUTIONS == 0
+                    continue;
+                    #endif
+                }
 
                 // Don't store the expression if this is the last loop
                 // or if the expression is equivalent to a previous one
@@ -80,12 +83,15 @@ int main() {
                         expression *expr2 = expressions[expr2Length]->data + k;
 
                         expression *newExpr = expressions[newExprLength]->data + expressions[newExprLength]->length;
-                        expression_combine(newExpr, expr1, expr2, op);
-                        if (!newExpr->isValid)
+                        if (!expression_combine(newExpr, expr1, expr2, op))
                             continue;
 
-                        if (expression_validate(newExpr))
+                        if (expression_validate(newExpr)) {
                             print_solution(newExpr, newExprLength);
+                            #if CACHE_SOLUTIONS == 0
+                            continue;
+                            #endif
+                        }
 
                         if (newExprLength != MAX_LENGTH_SEARCHED && hashtable_insert_if_higher(&cache, newExpr->values, op->precedence)) {
                             expressions[newExprLength]->length++;

@@ -25,8 +25,7 @@ bool expression_validate(const expression *expr) {
 // Create an expression that evaluates to the values in INITIAL
 expression expression_variable_create() {
     expression expr = {
-        .op = OPERATOR_ATOM + VARIABLE,
-        .isValid = true
+        .op = OPERATOR_ATOM + VARIABLE
     };
 
     for (size_t i=0; i < VALUE_COUNT; ++i)
@@ -38,8 +37,7 @@ expression expression_variable_create() {
 // Create an expression that always evaluates to value
 expression expression_int_literal_create(int value) {
     expression expr = {
-        .op = OPERATOR_ATOM + INT_LITERAL,
-        .isValid = true
+        .op = OPERATOR_ATOM + INT_LITERAL
     };
 
     for (size_t i=0; i < VALUE_COUNT; ++i)
@@ -49,34 +47,29 @@ expression expression_int_literal_create(int value) {
 }
 
 // Set the buffer to the result of a unary operation on the passed expression
-void expression_apply(expression *buf, const expression *expr, const operator *op) {
+// Returns whether applying the operator was successful
+bool expression_apply(expression *buf, const expression *expr, const operator *op) {
     *buf = (expression){
         .expr1 = expr,
-        .op = op,
-        .isValid = op->precedence <= expr->op->precedence
+        .op = op
     };
 
-    if (buf->isValid)
-        op->unaryFunc(buf, expr);
+    return op->precedence <= expr->op->precedence && op->unaryFunc(buf->values, expr->values);
 }
 
 // Set the buffer to the result of a binary operation on the passed expressions
-void expression_combine(expression *buf, const expression *expr1, const expression *expr2, const operator *op) {
+// Returns whether applying the operator was successful
+bool expression_combine(expression *buf, const expression *expr1, const expression *expr2, const operator *op) {
     *buf = (expression){
         .expr1 = expr1,
         .expr2 = expr2,
         .op = op,
-        .isValid = op->precedence <= expr1->op->precedence && op->precedence < expr2->op->precedence
     };
 
-    if (buf->isValid) {
-        // Chained comparison
-        if (op->precedence == COMPARISON_PRECEDENCE && expr1->op->precedence == COMPARISON_PRECEDENCE) {
-            op->chainedFunc(buf, expr1, expr2);
-        } else {
-            op->binaryFunc(buf, expr1, expr2);
-        }
-    }
+    return op->precedence <= expr1->op->precedence && op->precedence < expr2->op->precedence
+        && (op->precedence == COMPARISON_PRECEDENCE && expr1->op->precedence == COMPARISON_PRECEDENCE
+        ? op->chainedFunc(buf->values, expr1->values, expr2->values, expr1->expr2->values) // Chained comparison
+        : op->binaryFunc(buf->values, expr1->values, expr2->values));
 }
 
 // Generate the text representation for an expression

@@ -1,11 +1,10 @@
 #ifndef OPERATOR_H
 #define OPERATOR_H
 
-#include "expression.h"
+#include "parameters.h"
 
+#include <stdbool.h>
 #include <stdlib.h>
-
-struct expression;
 
 #define COMPARISON_PRECEDENCE 4
 
@@ -44,10 +43,10 @@ typedef enum operator_binary_type {
 typedef struct operator {
     char const *format;
     union {
-        void (*unaryFunc )(struct expression *, const struct expression *);
-        void (*binaryFunc)(struct expression *, const struct expression *, const struct expression *);
+        bool (*unaryFunc )(int [VALUE_COUNT], const int [VALUE_COUNT]);
+        bool (*binaryFunc)(int [VALUE_COUNT], const int [VALUE_COUNT], const int [VALUE_COUNT]);
     };
-    void (*chainedFunc)(struct expression *, const struct expression *, const struct expression *);
+    bool (*chainedFunc)(int [VALUE_COUNT], const int [VALUE_COUNT], const int [VALUE_COUNT], const int [VALUE_COUNT]);
     size_t length;
     int precedence;
 } operator;

@@ -1,14 +1,15 @@
-#include "expression.h"
 #include "operator.h"
 
+#include <stdbool.h>
 #include <limits.h>
 #include <stdlib.h>
 #include <math.h>
 
 #define UNARY_FUNC(name, operation) \
-    void name(expression *x, const expression *a) { \
+    bool name(int x[VALUE_COUNT], const int a[VALUE_COUNT]) { \
         for (size_t i=0; i < VALUE_COUNT; ++i) \
-            x->values[i] = operation a->values[i]; \
+            x[i] = operation a[i]; \
+        return true; \
     }
 
 UNARY_FUNC(paren_func,  );
@@ -16,9 +17,10 @@ UNARY_FUNC(  neg_func, -);
 UNARY_FUNC(  inv_func, ~);
 
 #define BINARY_FUNC(name, operation) \
-    void name(expression *x, const expression *a, const expression *b) { \
+    bool name(int x[VALUE_COUNT], const int a[VALUE_COUNT], const int b[VALUE_COUNT]) { \
         for (size_t i=0; i < VALUE_COUNT; ++i) \
-            x->values[i] = a->values[i] operation b->values[i]; \
+            x[i] = a[i] operation b[i]; \
+        return true; \
     }
 
 BINARY_FUNC( mul_func, *);
@@ -35,45 +37,46 @@ BINARY_FUNC(ge_func, >=);
 BINARY_FUNC(ne_func, !=);
 BINARY_FUNC(eq_func, ==);
 
-void pow_func(expression *x, const expression *a, const expression *b) {
+bool pow_func(int x[VALUE_COUNT], const int a[VALUE_COUNT], const int b[VALUE_COUNT]) {
     for (size_t i=0; i < VALUE_COUNT; ++i) {
-        if (a->values[i] == 0 && b->values[i] < 0) {  // python doesn't allow raising 0 to a negative power
-            x->isValid = false;
-            return;
-        }
+        if (a[i] == 0 && b[i] < 0)  // python doesn't allow raising 0 to a negative power
+            return false;
 
-        x->values[i] = pow(a->values[i], b->values[i]);
+        x[i] = pow(a[i], b[i]);
     }
+
+    return true;
 }
 
-void fdiv_func(expression *x, const expression *a, const expression *b) {
+bool fdiv_func(int x[VALUE_COUNT], const int a[VALUE_COUNT], const int b[VALUE_COUNT]) {
     for (size_t i=0; i < VALUE_COUNT; ++i) {
-        if (b->values[i] == 0 || (a->values[i] == INT_MIN && b->values[i] == -1)) {
-            x->isValid = false;
-            return;
-        }
+        if (b[i] == 0 || (a[i] == INT_MIN && b[i] == -1))
+            return false;
 
         // C's int div truncates instead of flooring
-        x->values[i] = floor((double)a->values[i] / b->values[i]);
+        x[i] = floor((double)a[i] / b[i]);
     }
+
+    return true;
 }
 
-void mod_func(expression *x, const expression *a, const expression *b) {
+bool mod_func(int x[VALUE_COUNT], const int a[VALUE_COUNT], const int b[VALUE_COUNT]) {
     for (size_t i=0; i < VALUE_COUNT; ++i) {
-        if (b->values[i] == 0 || (a->values[i] == INT_MIN && b->values[i] == -1)) {
-            x->isValid = false;
-            return;
-        }
+        if (b[i] == 0 || (a[i] == INT_MIN && b[i] == -1))
+            return false;
 
         // C's mod gives the remainder
-        x->values[i] = ((a->values[i] % b->values[i]) + b->values[i]) % b->values[i];
+        x[i] = ((a[i] % b[i]) + b[i]) % b[i];
     }
+
+    return true;
 }
 
 #define CHAINED_FUNC(name, operation) \
-    void name(expression *x, const expression *a, const expression *b) { \
+    bool name(int x[VALUE_COUNT], const int a[VALUE_COUNT], const int b[VALUE_COUNT], const int c[VALUE_COUNT]) { \
         for (size_t i=0; i < VALUE_COUNT; ++i) \
-            x->values[i] = a->values[i] && a->expr2->values[i] operation b->values[i]; \
+            x[i] = a[i] && (c[i] operation b[i]); \
+        return true; \
     }
 
 CHAINED_FUNC(lt_chained_func, < );

@@ -13,7 +13,6 @@ typedef struct expression {
     const struct expression *expr1;
     const struct expression *expr2;
     const operator *op;
-    bool isValid;
 } expression;
 
 void expression_format(char buf[MAX_EXPRESSION_LENGTH], const expression *expr);
@@ -23,7 +22,7 @@ bool expression_validate(const expression *expr);
 expression expression_variable_create();
 expression expression_int_literal_create(int value);
 
-void expression_apply(expression *buf, const expression *expr, const operator *op);
-void expression_combine(expression *buf, const expression *expr1, const expression *expr2, const operator *op);
+bool expression_apply(expression *buf, const expression *expr, const operator *op);
+bool expression_combine(expression *buf, const expression *expr1, const expression *expr2, const operator *op);
 
 #endif
