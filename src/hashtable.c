@@ -55,16 +55,20 @@ static inline void hashtable_check_extend(hashtable **tablePointer) {
     if (oldTable->elementCount * 100 / oldTable->size < HASHTABLE_MAX_LOAD_PERCENTAGE)
         return;
 
-    hashtable *newTable = calloc(1, sizeof *oldTable + 2*oldTable->size*sizeof *oldTable->data);
+    size_t newSize = 2 * oldTable->size;
+
+    hashtable *newTable = calloc(1, sizeof *newTable + newSize*sizeof *oldTable->data);
     CHECK_ALLOC(newTable, "hash table");
 
-    newTable->size = 2*oldTable->size;
+    newTable->size = newSize;
 
     for (size_t i=0; i < oldTable->size; ++i) {
         hashtable_element element = oldTable->data[i];
         if (element.exists)
             hashtable_insert_if_higher(&newTable, element.key, element.value);
     }
+
+    free(oldTable);
 
     *tablePointer = newTable;
 }
