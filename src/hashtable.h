@@ -11,11 +11,11 @@
 // How much of the table needs to be filled before it's extended
 #define HASHTABLE_MAX_LOAD_PERCENTAGE 60
 
-typedef struct hashtable hashtable;
+typedef struct hashtable hashtable_h;
 
-hashtable *hashtable_create(void);
-void       hashtable_destroy(hashtable *table);
+hashtable_h *hashtable_create(void);
+void         hashtable_destroy(hashtable_h *table);
 
-bool hashtable_insert_if_higher(hashtable **table, const int key[VALUE_COUNT], int value);
+bool hashtable_insert_if_higher(hashtable_h **table, const int key[VALUE_COUNT], int value);
 
 #endif

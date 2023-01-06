@@ -5,26 +5,41 @@
 
 #include <stdlib.h>
 
-#define list_of(type) struct { \
-    size_t length; \
-    type data[]; \
+#define LIST_BASE_SIZE 16
+
+typedef struct list_header {
+    size_t length;  // Amount of elements in the list
+    size_t size;    // Amount of elements the list has access to
+} list_header;
+
+#define list_length_of(list) ((list_header *)list - 1)->length
+#define list_size_of(list)   ((list_header *)list - 1)->size
+
+// Allocate memory for a list of size LIST_BASE_SIZE
+#define list_init(list) { \
+    list = (void *)((list_header *)calloc(1, sizeof(list_header) + LIST_BASE_SIZE * sizeof *list) + 1); \
+    list_size_of(list) = LIST_BASE_SIZE; \
 }
+#define list_destroy(list) free((list_header *)list - 1)
 
-// Allocate memory for a list of size of 1
-#define list_create(list) calloc(1, sizeof(*list) + 1 * sizeof(*list->data))
-#define list_destroy(list) free(list)
-
-// Double the size of the list if the list length is a power of 2
-#define list_check_length(list) \
-    if (!(list->length & (list->length - 1))) { \
-        list = realloc(list, sizeof(*list) + 2 * list->length * sizeof(*list->data)); \
-        CHECK_ALLOC(list, "more expressions"); \
+// Double the size of the list if the list length is equal to its size
+#define list_check_size(list) \
+    if (list_length_of(list) == list_size_of(list)) { \
+        list_size_of(list) *= 2; \
+        list = (void *)((list_header *)realloc(((list_header *)list - 1), sizeof(list_header) + list_size_of(list) * sizeof *list) + 1); \
+        CHECK_ALLOC(list, "list"); \
     }
 
-// Add a value to the list then check if the list should be extended
+// Increment the length of the list then check whether it should be extended
+#define list_length_increment(list) { \
+    list_length_of(list)++; \
+    list_check_size(list); \
+}
+
+// Add a value to the end of the list then check whether it should be extended
 #define list_append(list, value) { \
-    list->data[list->length++] = value; \
-    list_check_length(list); \
+    list[list_length_of(list)] = value; \
+    list_length_increment(list); \
 }
 
 #endif

@@ -43,10 +43,10 @@ typedef enum operator_binary_type {
 typedef struct operator {
     char const *format;
     union {
-        bool (*unaryFunc )(int [VALUE_COUNT], const int [VALUE_COUNT]);
-        bool (*binaryFunc)(int [VALUE_COUNT], const int [VALUE_COUNT], const int [VALUE_COUNT]);
+        bool (*unaryFunc )(int *restrict, const int *);
+        bool (*binaryFunc)(int *restrict, const int *, const int *);
     };
-    bool (*chainedFunc)(int [VALUE_COUNT], const int [VALUE_COUNT], const int [VALUE_COUNT], const int [VALUE_COUNT]);
+    bool (*chainedFunc)(int *restrict, const int *, const int *, const int *);
     size_t length;
     int precedence;
 } operator;

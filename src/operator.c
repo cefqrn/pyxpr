@@ -6,7 +6,7 @@
 #include <math.h>
 
 #define UNARY_FUNC(name, operation) \
-    bool name(int x[VALUE_COUNT], const int a[VALUE_COUNT]) { \
+    bool name(int *restrict x, const int *a) { \
         for (size_t i=0; i < VALUE_COUNT; ++i) \
             x[i] = operation a[i]; \
         return true; \
@@ -17,7 +17,7 @@ UNARY_FUNC(  neg_func, -);
 UNARY_FUNC(  inv_func, ~);
 
 #define BINARY_FUNC(name, operation) \
-    bool name(int x[VALUE_COUNT], const int a[VALUE_COUNT], const int b[VALUE_COUNT]) { \
+    bool name(int *restrict x, const int *a, const int *b) { \
         for (size_t i=0; i < VALUE_COUNT; ++i) \
             x[i] = a[i] operation b[i]; \
         return true; \
@@ -37,7 +37,7 @@ BINARY_FUNC(ge_func, >=);
 BINARY_FUNC(ne_func, !=);
 BINARY_FUNC(eq_func, ==);
 
-bool pow_func(int x[VALUE_COUNT], const int a[VALUE_COUNT], const int b[VALUE_COUNT]) {
+bool pow_func(int *restrict x, const int *a, const int *b) {
     for (size_t i=0; i < VALUE_COUNT; ++i) {
         if (a[i] == 0 && b[i] < 0)  // python doesn't allow raising 0 to a negative power
             return false;
@@ -48,7 +48,7 @@ bool pow_func(int x[VALUE_COUNT], const int a[VALUE_COUNT], const int b[VALUE_CO
     return true;
 }
 
-bool fdiv_func(int x[VALUE_COUNT], const int a[VALUE_COUNT], const int b[VALUE_COUNT]) {
+bool fdiv_func(int *restrict x, const int *a, const int *b) {
     for (size_t i=0; i < VALUE_COUNT; ++i) {
         if (b[i] == 0 || (a[i] == INT_MIN && b[i] == -1))
             return false;
@@ -60,7 +60,7 @@ bool fdiv_func(int x[VALUE_COUNT], const int a[VALUE_COUNT], const int b[VALUE_C
     return true;
 }
 
-bool mod_func(int x[VALUE_COUNT], const int a[VALUE_COUNT], const int b[VALUE_COUNT]) {
+bool mod_func(int *restrict x, const int *a, const int *b) {
     for (size_t i=0; i < VALUE_COUNT; ++i) {
         if (b[i] == 0 || (a[i] == INT_MIN && b[i] == -1))
             return false;
@@ -73,7 +73,7 @@ bool mod_func(int x[VALUE_COUNT], const int a[VALUE_COUNT], const int b[VALUE_CO
 }
 
 #define CHAINED_FUNC(name, operation) \
-    bool name(int x[VALUE_COUNT], const int a[VALUE_COUNT], const int b[VALUE_COUNT], const int c[VALUE_COUNT]) { \
+    bool name(int *restrict x, const int *a, const int *b, const int *c) { \
         for (size_t i=0; i < VALUE_COUNT; ++i) \
             x[i] = a[i] && (c[i] operation b[i]); \
         return true; \
