@@ -30,7 +30,7 @@ $(bindir):
 	mkdir $(bindir)
 
 clean:
-	rm -f $(bindir)/* $(libdir)/*
+	rm -rf $(bindir)/* $(libdir)/*
 
 remake:
 	make clean

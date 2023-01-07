@@ -48,7 +48,7 @@ expression expression_int_literal_create(int value) {
 
 // Set the buffer to the result of a unary operation on the passed expression
 // Returns whether applying the operator was successful
-bool expression_apply(expression *buf, const expression *expr, const operator *op) {
+bool expression_apply(expression *restrict buf, const expression *expr, const operator *op) {
     *buf = (expression){
         .expr1 = expr,
         .op = op
@@ -59,7 +59,7 @@ bool expression_apply(expression *buf, const expression *expr, const operator *o
 
 // Set the buffer to the result of a binary operation on the passed expressions
 // Returns whether applying the operator was successful
-bool expression_combine(expression *buf, const expression *expr1, const expression *expr2, const operator *op) {
+bool expression_combine(expression *restrict buf, const expression *expr1, const expression *expr2, const operator *op) {
     *buf = (expression){
         .expr1 = expr1,
         .expr2 = expr2,

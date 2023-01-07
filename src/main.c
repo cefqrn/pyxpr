@@ -44,7 +44,7 @@ int main() {
                 continue;
 
             for (size_t j=0; j < list_length_of(expressions[exprLength]); ++j) {
-                expression *expr = expressions[exprLength] + j;
+                const expression *expr = expressions[exprLength] + j;
 
                 // Overwrite the last element in the list until it's valid
                 expression *newExpr = expressions[newExprLength] + list_length_of(expressions[newExprLength]);
@@ -76,9 +76,9 @@ int main() {
                 size_t expr2Length = remainingLength - expr1Length;
 
                 for (size_t j=0; j < list_length_of(expressions[expr1Length]); ++j) {
-                    expression *expr1 = expressions[expr1Length] + j;
+                    const expression *expr1 = expressions[expr1Length] + j;
                     for (size_t k=0; k < list_length_of(expressions[expr2Length]); ++k) {
-                        expression *expr2 = expressions[expr2Length] + k;
+                        const expression *expr2 = expressions[expr2Length] + k;
 
                         expression *newExpr = expressions[newExprLength] + list_length_of(expressions[newExprLength]);
                         if (!expression_combine(newExpr, expr1, expr2, op))

@@ -22,7 +22,7 @@ bool expression_validate(const expression *expr);
 expression expression_variable_create();
 expression expression_int_literal_create(int value);
 
-bool expression_apply(expression *buf, const expression *expr, const operator *op);
-bool expression_combine(expression *buf, const expression *expr1, const expression *expr2, const operator *op);
+bool expression_apply(expression *restrict buf, const expression *expr, const operator *op);
+bool expression_combine(expression *restrict buf, const expression *expr1, const expression *expr2, const operator *op);
 
 #endif
