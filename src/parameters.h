@@ -8,6 +8,9 @@
 // Let a solution be a part of future expressions
 #define CACHE_SOLUTIONS 0
 
+// Allow numbers other than -9–9
+#define CONCAT_NUMBERS 1
+
 #define MAX_LENGTH_SEARCHED 11
 
 // The desired outputs of the expression

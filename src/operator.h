@@ -7,6 +7,7 @@
 #include <stdlib.h>
 
 #define COMPARISON_PRECEDENCE 4
+#define INT_LITERAL_PRECEDENCE 17
 
 typedef enum operator_atom_type {
     VARIABLE,
@@ -22,6 +23,9 @@ typedef enum operator_unary_type {
 } operator_unary_type;
 
 typedef enum operator_binary_type {
+    #if CONCAT_NUMBERS == 1
+    CONCAT_NUMBER,
+    #endif
     POW_OPERATOR,
     MUL_OPERATOR,
     FDIV_OPERATOR,

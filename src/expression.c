@@ -66,7 +66,12 @@ bool expression_combine(expression *restrict buf, const expression *expr1, const
         .op = op,
     };
 
-    return op->precedence <= expr1->op->precedence && op->precedence < expr2->op->precedence
+    return op->precedence <= expr1->op->precedence && (op->precedence < expr2->op->precedence
+        #if CONCAT_NUMBERS == 1
+        // only allow concatenation from the right
+        || expr2->op == OPERATOR_ATOM + INT_LITERAL
+        #endif
+        )
         && (op->precedence == COMPARISON_PRECEDENCE && expr1->op->precedence == COMPARISON_PRECEDENCE
         ? op->chainedFunc(buf->values, expr1->values, expr2->values, expr1->expr2->values) // Chained comparison
         : op->binaryFunc(buf->values, expr1->values, expr2->values));

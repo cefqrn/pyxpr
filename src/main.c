@@ -7,11 +7,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-void print_solution(expression *solution, size_t length) {
+void print_solution(expression *solution) {
     char buf[MAX_EXPRESSION_LENGTH];
     expression_format(buf, solution);
 
-    printf("Found solution of length %zu: %s\n", length, buf);
+    printf("(%d) %s\n", solution->op->precedence, buf);
 }
 
 int main() {
@@ -52,7 +52,7 @@ int main() {
                     continue;
 
                 if (expression_validate(newExpr)) {
-                    print_solution(newExpr, newExprLength);
+                    print_solution(newExpr);
                     #if CACHE_SOLUTIONS == 0
                     continue;
                     #endif
@@ -85,7 +85,7 @@ int main() {
                             continue;
 
                         if (expression_validate(newExpr)) {
-                            print_solution(newExpr, newExprLength);
+                            print_solution(newExpr);
                             #if CACHE_SOLUTIONS == 0
                             continue;
                             #endif
@@ -98,7 +98,7 @@ int main() {
             }
         }
 
-        printf("Stored %zu expressions\n", list_length_of(expressions[newExprLength]));
+        printf("Stored %zu expressions\n\n", list_length_of(expressions[newExprLength]));
     }
 
     for (size_t i=1; i < MAX_EXPRESSION_LENGTH; ++i)

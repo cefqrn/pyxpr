@@ -23,6 +23,8 @@ UNARY_FUNC(  inv_func, ~);
         return true; \
     }
 
+BINARY_FUNC(combine_func, * 10 +);
+
 BINARY_FUNC( mul_func, *);
 BINARY_FUNC( add_func, +);
 BINARY_FUNC( sub_func, -);
@@ -87,8 +89,8 @@ CHAINED_FUNC(ne_chained_func, !=);
 CHAINED_FUNC(eq_chained_func, ==);
 
 const operator OPERATOR_ATOM[OPERATOR_ATOM_COUNT] = {
-    [VARIABLE   ] = { .format =  "x", .precedence = 17 },
-    [INT_LITERAL] = { .format = "%s", .precedence = 16 },
+    [INT_LITERAL] = { .format = "%s", .precedence = INT_LITERAL_PRECEDENCE },
+    [VARIABLE   ] = { .format =  "x", .precedence = 16 },
 };
 
 const operator OPERATOR_UNARY[OPERATOR_UNARY_COUNT] = {
@@ -98,6 +100,9 @@ const operator OPERATOR_UNARY[OPERATOR_UNARY_COUNT] = {
 };
 
 const operator OPERATOR_BINARY[OPERATOR_BINARY_COUNT] = {
+    #if CONCAT_NUMBERS == 1
+    [CONCAT_NUMBER] = { .format =   "%s%s", .precedence = INT_LITERAL_PRECEDENCE, .length = 0, .binaryFunc = combine_func },
+    #endif
     [POW_OPERATOR ] = { .format = "%s**%s", .precedence = 12, .length = 2, .binaryFunc =  pow_func },
     [MUL_OPERATOR ] = { .format =  "%s*%s", .precedence = 10, .length = 1, .binaryFunc =  mul_func },
     [FDIV_OPERATOR] = { .format = "%s//%s", .precedence = 10, .length = 2, .binaryFunc = fdiv_func },
