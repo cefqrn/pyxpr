@@ -5,6 +5,7 @@
 #include "list.h"
 
 #include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
 
 void print_solution(expression *solution) {
@@ -23,15 +24,21 @@ int main() {
     for (size_t i=1; i < MAX_EXPRESSION_LENGTH; ++i)
         list_init(expressions[i]);
 
-    // Add variable that takes the values of INITIAL
-    list_append(expressions[1], expression_variable_create());
+    // Add variables
+    for (size_t i=0; i < VARIABLE_COUNT; ++i) {
+        expression var = expression_variable_create(i);
+        list_append(expressions[strlen(var.varName)], var);
+
+        hashtable_insert_if_higher(&cache, var.values, var.op->precedence);
+    }
 
     // Add integer literals from 0 through 9
-    for (size_t i=0; i < 10; ++i)
-        list_append(expressions[1], expression_int_literal_create(i));
+    for (size_t i=0; i < 10; ++i) {
+        expression value = expression_int_literal_create(i);
+        list_append(expressions[1], value);
 
-    for (size_t i=0; i < list_length_of(expressions[1]); ++i)
-        hashtable_insert_if_higher(&cache, expressions[1][i].values, expressions[1][i].op->precedence);
+        hashtable_insert_if_higher(&cache, value.values, value.op->precedence);
+    }
 
     for (size_t newExprLength=1; newExprLength < MAX_EXPRESSION_LENGTH; ++newExprLength) {
         printf("Finding expressions of length %zu...\n", newExprLength);

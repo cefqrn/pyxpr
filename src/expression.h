@@ -10,8 +10,13 @@
 
 typedef struct expression {
     int values[VALUE_COUNT];
-    const struct expression *expr1;
-    const struct expression *expr2;
+    union {
+        char *varName;
+        struct {
+            const struct expression *expr1;
+            const struct expression *expr2;
+        };
+    };
     const operator *op;
 } expression;
 
@@ -19,7 +24,7 @@ void expression_format(char buf[MAX_EXPRESSION_LENGTH], const expression *expr);
 
 bool expression_validate(const expression *expr);
 
-expression expression_variable_create();
+expression expression_variable_create(int varIndex);
 expression expression_int_literal_create(int value);
 
 bool expression_apply(expression *restrict buf, const expression *expr, const operator *op);

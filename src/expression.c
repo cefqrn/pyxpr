@@ -23,13 +23,14 @@ bool expression_validate(const expression *expr) {
 }
 
 // Create an expression that evaluates to the values in INITIAL
-expression expression_variable_create() {
+expression expression_variable_create(int varIndex) {
     expression expr = {
+        .varName = VARIABLES[varIndex].name,
         .op = OPERATOR_ATOM + VARIABLE
     };
 
     for (size_t i=0; i < VALUE_COUNT; ++i)
-        expr.values[i] = INITIAL[i];
+        expr.values[i] = VARIABLES[varIndex].values[i];
 
     return expr;
 }
@@ -82,7 +83,7 @@ void expression_format(char buf[MAX_EXPRESSION_LENGTH], const expression *expr) 
     if (expr->op == OPERATOR_ATOM + INT_LITERAL) {
         snprintf(buf, MAX_EXPRESSION_LENGTH, "%d", *expr->values);
     } else if (expr->op == OPERATOR_ATOM + VARIABLE) {
-        snprintf(buf, MAX_EXPRESSION_LENGTH, "x");
+        snprintf(buf, MAX_EXPRESSION_LENGTH, "%s", expr->varName);
     } else if (expr->expr2 == NULL) { // binary operator
         char buf1[MAX_EXPRESSION_LENGTH];
 

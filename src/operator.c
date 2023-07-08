@@ -90,7 +90,7 @@ CHAINED_FUNC(eq_chained_func, ==);
 
 const operator OPERATOR_ATOM[OPERATOR_ATOM_COUNT] = {
     [INT_LITERAL] = { .format = "%s", .precedence = INT_LITERAL_PRECEDENCE },
-    [VARIABLE   ] = { .format =  "x", .precedence = 16 },
+    [VARIABLE   ] = {                 .precedence = 16 },
 };
 
 const operator OPERATOR_UNARY[OPERATOR_UNARY_COUNT] = {
